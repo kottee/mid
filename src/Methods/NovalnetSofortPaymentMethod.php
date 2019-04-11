@@ -22,6 +22,8 @@ use Plenty\Plugin\Application;
 use Novalnet\Helper\PaymentHelper;
 use Novalnet\Services\PaymentService;
 
+use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
+
 /**
  * Class NovalnetSofortPaymentMethod
  *
@@ -43,6 +45,8 @@ class NovalnetSofortPaymentMethod extends PaymentMethodService
 	 * @var PaymentService
 	 */
 	private $paymentService;
+	
+	
 	
     /**
      * NovalnetPaymentMethod constructor.
@@ -66,11 +70,11 @@ class NovalnetSofortPaymentMethod extends PaymentMethodService
      *
      * @return bool
      */
-    public function isActive():bool
+    public function isActive(BasketRepositoryContract $basket):bool
     {
 		$active_payment_allowed_country = 'true';
 		if ($allowed_country = $this->configRepository->get('Novalnet.novalnet_sofort_allowed_country')) {
-		$active_payment_allowed_country  = $this->paymentService->allowedCountries($allowed_country);
+		$active_payment_allowed_country  = $this->paymentService->allowedCountries($allowed_country, $basket);
 		}
         return (bool)(($this->configRepository->get('Novalnet.novalnet_sofort_payment_active') == 'true') && $this->paymentHelper->paymentActive() && $active_payment_allowed_country);
     }
