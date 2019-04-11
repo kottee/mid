@@ -70,10 +70,11 @@ class NovalnetSofortPaymentMethod extends PaymentMethodService
      *
      * @return bool
      */
-    public function isActive(BasketRepositoryContract $basket):bool
+    public function isActive(BasketRepositoryContract $basketRepo):bool
     {
 		$active_payment_allowed_country = 'true';
 		if ($allowed_country = $this->configRepository->get('Novalnet.novalnet_sofort_allowed_country')) {
+			$basket = $basketRepo();
 		$active_payment_allowed_country  = $this->paymentService->allowedCountries($allowed_country, $basket);
 		}
         return (bool)(($this->configRepository->get('Novalnet.novalnet_sofort_payment_active') == 'true') && $this->paymentHelper->paymentActive() && $active_payment_allowed_country);
