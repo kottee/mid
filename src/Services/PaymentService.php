@@ -106,7 +106,7 @@ class PaymentService
         $this->sessionStorage           = $sessionStorage;
         $this->addressRepository        = $addressRepository;
         $this->countryRepository        = $countryRepository;
-	$this->basketRepository  = $basketRepository;
+	$this->basketRepository  = $basketRepository->load();
         $this->webstoreHelper           = $webstoreHelper;
         $this->paymentHelper            = $paymentHelper;
         $this->transactionLogData       = $transactionLogData;
