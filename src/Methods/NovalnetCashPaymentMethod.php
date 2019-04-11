@@ -68,11 +68,14 @@ class NovalnetCashPaymentMethod extends PaymentMethodService
      */
     public function isActive():bool
     {
+	    if(($this->configRepository->get('Novalnet.novalnet_cashpayment_payment_active') == 'true')){
 		$active_payment_allowed_country = 'true';
 		if ($allowed_country = $this->configRepository->get('Novalnet.novalnet_cashpayment_allowed_country')) {
 		$active_payment_allowed_country  = $this->paymentService->allowedCountries($allowed_country);
 		}
-        return (bool)(($this->configRepository->get('Novalnet.novalnet_cashpayment_payment_active') == 'true') && $this->paymentHelper->paymentActive() && $active_payment_allowed_country);
+        return (bool)($this->paymentHelper->paymentActive() && $active_payment_allowed_country);
+	    }
+	    return false;
     }
 
     /**
