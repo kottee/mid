@@ -22,9 +22,6 @@ use Plenty\Plugin\Application;
 use Novalnet\Helper\PaymentHelper;
 use Novalnet\Services\PaymentService;
 
-use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
-use Plenty\Modules\Basket\Models\Basket;
-
 /**
  * Class NovalnetIdealPaymentMethod
  *
@@ -47,7 +44,6 @@ class NovalnetIdealPaymentMethod extends PaymentMethodService
 	 */
 	private $paymentService;
 	
-	private $basket;
 
     /**
      * NovalnetPaymentMethod constructor.
@@ -58,13 +54,11 @@ class NovalnetIdealPaymentMethod extends PaymentMethodService
      */
     public function __construct(ConfigRepository $configRepository,
                                 PaymentHelper $paymentHelper,
-                                PaymentService $paymentService,
-			       BasketRepositoryContract $basket)
+                                PaymentService $paymentService)
     {
         $this->configRepository = $configRepository;
         $this->paymentHelper = $paymentHelper;
         $this->paymentService = $paymentService;
-	$this->basket = $basket->load();
     }
 
     /**
@@ -77,8 +71,7 @@ class NovalnetIdealPaymentMethod extends PaymentMethodService
     {
 		$active_payment_allowed_country = 'true';
 		if ($allowed_country = $this->configRepository->get('Novalnet.novalnet_ideal_allowed_country')) {
-		//$active_payment_allowed_country  = $this->paymentService->allowedCountries($allowed_country);
-		$active_payment_allowed_country  = $this->paymentService->allowedCountrieslist($this->basket, $allowed_country);
+		$active_payment_allowed_country  = $this->paymentService->allowedCountries($allowed_country);
 		}
         return (bool)(($this->configRepository->get('Novalnet.novalnet_ideal_payment_active') == 'true') && $this->paymentHelper->paymentActive() && $active_payment_allowed_country);
     }
