@@ -850,28 +850,22 @@ class PaymentService
 	public function allowedCountries($allowed_country) {
 		$allowed_country = str_replace(' ', '', $allowed_country);
 		$allowed_country_array = explode(',', $allowed_country);	
-		$basket = $this->basketRepository->load();	
-		$billingAddressId = $basket->customerInvoiceAddressId;
+		if(!empty($this->basketRepository)) {
+			$basket = $this->basketRepository;
+			if(!empty($basket->customerInvoiceAddressId)){
+				$billingAddressId = $basket->customerInvoiceAddressId;
+				
 		$address = $this->addressRepository->findAddressById($billingAddressId);
+				if(!empty($address)){
 		$country = $this->countryRepository->findIsoCode($address->countryId, 'iso_code_2');
+					if(!empty($country)){
 		if (in_array ($country, $allowed_country_array)) {
 			return true;
 		}  
-			return false;
-	}
-	
-	
-	
-		public function allowedCountrieslist(Basket $basket, $allowed_country='') {
-		$allowed_country = str_replace(' ', '', $allowed_country);
-		$allowed_country_array = explode(',', $allowed_country);	
-		//$basket = $this->basketRepository->load();	
-		$billingAddressId = $basket->customerInvoiceAddressId;
-		$address = $this->addressRepository->findAddressById($billingAddressId);
-		$country = $this->countryRepository->findIsoCode($address->countryId, 'iso_code_2');
-		if (in_array ($country, $allowed_country_array)) {
-			return true;
-		}  
+					}
+			}
+			}
+		}
 			return false;
 	}
 	
